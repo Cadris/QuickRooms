@@ -2,6 +2,11 @@
 const socket = io();
 const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
+const {username, room} = Qs.parse(location.search, {
+    ignoreQueryPrefix:true
+})
+
+console.log(username, room);
 
 // Create the functions
 
@@ -36,9 +41,9 @@ function outputMessage(message) {
 
     //console.log("inside: "+message);
 
-    div.innerHTML = `<p class="meta">Brad <span>9:12pm</span></p>
+    div.innerHTML = `<p class="meta">${message.username}<span style="margin-left:5px">${message.time}</span></p>
     <p class="text">
-        ${message}
+        ${message.text}
     </p>`;
 
     document.querySelector('.chat-messages').appendChild(div);

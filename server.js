@@ -2,12 +2,15 @@ const express = require('express');
 const path =  require('path');
 const http = require('http');
 const socketio = require('socket.io');
+const formatMessage = require('./utils/messages');
 
 // constant variables
 const PORT = 3000 || process.env.PORT
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const botName = 'ChatCord Bot';
+
 
 // set static 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -17,24 +20,24 @@ io.on('connection', socket => {
     console.log('New Web Socket Connection...');
 
     // To Single Client
-    socket.emit('message', 'Welcome to QuickRooms');
+    socket.emit('message', formatMessage(botName, 'Welcome to QuickRooms'));
 
     // Broadcast when a user connects: To all except the user itself
-    socket.broadcast.emit('message', 'A User Has Joined The Chat');
+    socket.broadcast.emit('message', formatMessage(botName, 'A User Has Joined The Chat'));
 
     // To All Clients in general
     //io.emit();
 
     // Runs When Client Disconnects
     socket.on('disconnect', () =>{
-        io.emit('message', 'A User has left the Chat')
+        io.emit('message', formatMessage(botName, 'A User has left the Chat'));
     });
 
     // Listen to Chat Messages
     socket.on('chatMessage', (msg)=>{
         console.log("Server side Message: "+msg);
 
-        io.emit('message', msg);
+        io.emit('message', formatMessage('USER',msg));
     });
 
 });
