@@ -1,6 +1,7 @@
 // Create the constants
 const socket = io();
 const chatForm = document.getElementById('chat-form');
+const chatMessages = document.querySelector('.chat-messages');
 
 // Create the functions
 
@@ -8,6 +9,9 @@ const chatForm = document.getElementById('chat-form');
 socket.on('message', message => {
     console.log(message);
     outputMessage(message);
+
+    // scroll chat to down 
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 
@@ -17,6 +21,7 @@ chatForm.addEventListener('submit', (e)=>{
 
     const msg = e.target.elements.msg.value;
     e.target.elements.msg.value=null;
+    e.target.elements.msg.focus();
 
     //console.log(msg);
 
