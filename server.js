@@ -16,7 +16,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 io.on('connection', socket => {
     console.log('New Web Socket Connection...');
 
+    // To Single Client
     socket.emit('message', 'Welcome to QuickRooms');
+
+    // Broadcast when a user connects: To all except the user itself
+    socket.broadcast.emit('message', 'A User Has Joined The Chat');
+
+    // To All Clients in general
+    //io.emit();
+
+    //Runs When Client Disconnects
+    socket.on('disconnect', () =>{
+        io.emit('message', 'A User has left the Chat')
+    });
+
 });
 
 
