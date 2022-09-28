@@ -33,6 +33,8 @@ io.on('connection', socket => {
     // Listen to Chat Messages
     socket.on('chatMessage', (msg)=>{
         console.log("Server side Message: "+msg);
+
+        io.emit('message', msg);
     });
 
 });
