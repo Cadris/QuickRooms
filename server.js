@@ -25,9 +25,14 @@ io.on('connection', socket => {
     // To All Clients in general
     //io.emit();
 
-    //Runs When Client Disconnects
+    // Runs When Client Disconnects
     socket.on('disconnect', () =>{
         io.emit('message', 'A User has left the Chat')
+    });
+
+    // Listen to Chat Messages
+    socket.on('chatMessage', (msg)=>{
+        console.log("Server side Message: "+msg);
     });
 
 });
