@@ -16,6 +16,7 @@ chatForm.addEventListener('submit', (e)=>{
     e.preventDefault();
 
     const msg = e.target.elements.msg.value;
+    e.target.elements.msg.value=null;
 
     //console.log(msg);
 
