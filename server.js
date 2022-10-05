@@ -32,6 +32,12 @@ io.on('connection', socket => {
         // Broadcast when a user connects: To all except the user itself
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${username} Has Joined The Chat`));
 
+        // send users in the room
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUser(user.room) 
+        });
+
     });
     // To All Clients in general
     //io.emit();
@@ -49,7 +55,13 @@ io.on('connection', socket => {
         const user = userLeave(socket.id);
 
         if (user) {
-            io.to(user.room).emit('message', formatMessage(botName, `A ${user.username} has left the Chat`));
+            io.to(user.room).emit('message', formatMessage(botName, `${user.username} has left the Chat`));
+            
+            // send users in the room
+            io.to(user.room).emit('roomUsers', {
+                room: user.room,
+                users: getRoomUser(user.room) 
+            });
         }
     });
 

@@ -4,18 +4,36 @@ const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const {username, room} = Qs.parse(location.search, {
     ignoreQueryPrefix:true
-})
+});
+const roomName = document.getElementById('room-name');
+const userList = document.getElementById('users');
 
 // console.log(username, room);
 
 // emit on joining a room
 socket.emit('joinroom', { username, room });
 
+// Get Users and Room
+socket.on('roomUsers', ({room, users})=>{
+    outputRoomName(room);
+    outputUsers(users);
+});
+
 /*
     *******************************************
     Create the functions
     *******************************************
 */
+
+function outputUsers(users) {
+    userList.innerHTML = `
+        ${users.map(user => `<li>${user.username}</li>`).join('')}
+    `;
+}
+
+function outputRoomName(room) {
+    roomName.innerText = room;
+}
 
 // Catch emmit event :: Message from server
 socket.on('message', message => {
