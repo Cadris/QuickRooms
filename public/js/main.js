@@ -6,9 +6,16 @@ const {username, room} = Qs.parse(location.search, {
     ignoreQueryPrefix:true
 })
 
-console.log(username, room);
+// console.log(username, room);
 
-// Create the functions
+// emit on joining a room
+socket.emit('joinroom', { username, room });
+
+/*
+    *******************************************
+    Create the functions
+    *******************************************
+*/
 
 // Catch emmit event :: Message from server
 socket.on('message', message => {

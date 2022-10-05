@@ -16,3 +16,6 @@ Used Technologies:
 2. npm install
 3. npm run start
 ```
+
+1. `URL Link` : https://www.youtube.com/watch?v=jD7FnbI76Hg&t=15s
+2. Time: 36:50
