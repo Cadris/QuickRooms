@@ -3,7 +3,7 @@ const path =  require('path');
 const http = require('http');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser } = require('./utils/users');
+const { userJoin, getCurrentUser, getRoomUser, userLeave } = require('./utils/users');
 
 // constant variables
 const PORT = 3000 || process.env.PORT
@@ -27,10 +27,10 @@ io.on('connection', socket => {
         socket.join(user.room);
 
         // To Single Client
-        socket.emit('message', formatMessage(username, 'Welcome to QuickRooms'));
+        socket.emit('message', formatMessage(botName, 'Welcome to QuickRooms'));
 
         // Broadcast when a user connects: To all except the user itself
-        socket.broadcast.to(user.room).emit('message', formatMessage(username, `${username} Has Joined The Chat`));
+        socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${username} Has Joined The Chat`));
 
     });
     // To All Clients in general
@@ -39,14 +39,18 @@ io.on('connection', socket => {
     
     // Listen to Chat Messages
     socket.on('chatMessage', (msg)=>{
-        console.log("Server side Message: "+msg);
+        const user = getCurrentUser(socket.id);
         
-        io.emit('message', formatMessage('USER',msg));
+        io.to(user.room).emit('message', formatMessage(user.username,msg));
     });
     
     // Runs When Client Disconnects
     socket.on('disconnect', () =>{
-        io.emit('message', formatMessage(botName, 'A User has left the Chat'));
+        const user = userLeave(socket.id);
+
+        if (user) {
+            io.to(user.room).emit('message', formatMessage(botName, `A ${user.username} has left the Chat`));
+        }
     });
 
 });
